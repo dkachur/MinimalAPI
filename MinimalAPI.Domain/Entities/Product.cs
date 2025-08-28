@@ -9,13 +9,23 @@ namespace MinimalAPI.Domain.Entities
         public ProductDescription Description { get; set; } = null!;
         public ProductPrice Price { get; set; } = null!;
 
-        public Product(ProductName name, ProductDescription description, ProductPrice price)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            Description = description;
-            Price = price;
-        }
+        public static Product New(ProductName name, ProductDescription description, ProductPrice price)
+            => new()
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Description = description,
+                Price = price,
+            };
+            
+        public static Product Restore(Guid id, ProductName name, ProductDescription description, ProductPrice price)
+            => new() 
+            { 
+                Id = id, 
+                Name = name, 
+                Description = description, 
+                Price = price 
+            };
 
         private Product() { }
     }

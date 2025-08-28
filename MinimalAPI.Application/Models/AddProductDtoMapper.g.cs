@@ -8,11 +8,11 @@ namespace MinimalAPI.Application.DTOs
     {
         public static Product AdaptToProduct(this AddProductDto src)
         {
-            return new Product(new ProductName(src.Name), new ProductDescription(src.Description), new ProductPrice(src.Price));
+            return Product.New(new ProductName(src.Name), new ProductDescription(src.Description), new ProductPrice(src.Price));
         }
         public static Product AdaptTo(this AddProductDto src, Product p1)
         {
-            return new Product(new ProductName(src.Name), new ProductDescription(src.Description), new ProductPrice(src.Price));
+            return Product.New(new ProductName(src.Name), new ProductDescription(src.Description), new ProductPrice(src.Price));
         }
     }
 }

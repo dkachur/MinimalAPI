@@ -9,7 +9,7 @@ namespace MinimalAPI.Application
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<AddProductDto, Product>()
-                .MapWith(src => new Product(
+                .MapWith(src => Product.New(
                     new(src.Name), 
                     new(src.Description), 
                     new(src.Price)
