@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using FluentValidation;
 using MinimalAPI.Application.DTOs;
+using MinimalAPI.Application.Errors;
 using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.Domain.RepositoryContracts;
 
@@ -21,10 +22,8 @@ namespace MinimalAPI.Application.Services
         {
             var validationResult = await _validator.ValidateAsync(productDto);
             if (!validationResult.IsValid)
-            {
-                return Result.Fail<ProductDto>(validationResult.Errors.Select(e => e.ErrorMessage));
-            }
-
+                return Result.Fail<ProductDto>(validationResult.Errors.Select(e => new ValidationError(e.ErrorMessage)));
+            
             var addedProduct = await _repo.AddAsync(productDto.AdaptToProduct());
 
             return Result.Ok(addedProduct.AdaptToProductDto());
