@@ -1,5 +1,9 @@
-﻿namespace MinimalAPI.Application.DTOs
+﻿using Mapster;
+using MinimalAPI.Domain.Entities;
+
+namespace MinimalAPI.Application.DTOs
 {
+    [AdaptTo(typeof(Product)), GenerateMapper]
     public class UpdateProductDto
     {
         public Guid Id { get; set; } 
