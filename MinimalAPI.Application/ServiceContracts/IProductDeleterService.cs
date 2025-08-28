@@ -1,7 +1,9 @@
-﻿namespace MinimalAPI.Application.ServiceContracts
+﻿using FluentResults;
+
+namespace MinimalAPI.Application.ServiceContracts
 {
     public interface IProductDeleterService
     {
-        Task<bool> UpdateAsync(Guid productId);
+        Task<Result> DeleteAsync(Guid productId);
     }
 }

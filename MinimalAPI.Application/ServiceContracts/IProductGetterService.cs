@@ -1,9 +1,12 @@
-﻿using MinimalAPI.Application.DTOs;
+﻿using FluentResults;
+using MinimalAPI.Application.DTOs;
 
 namespace MinimalAPI.Application.ServiceContracts
 {
     public interface IProductGetterService
     {
-        Task<ProductDto?> GetAsync(Guid productId);
+        Task<Result<ProductDto>> GetAsync(Guid productId);
+
+        Task<IEnumerable<ProductDto>> GetAllAsync();
     }
 }
