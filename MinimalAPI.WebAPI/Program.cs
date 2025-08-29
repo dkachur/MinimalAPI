@@ -18,48 +18,6 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/products", async (IProductGetterService productGetter) =>
-{
-    var products = await productGetter.GetAllAsync();
-    return Results.Ok(products.Select(p => p.AdaptToProductResponse()));
-})
-.WithName("GetProducts");
-
-
-app.MapGet("/products/{id:guid}", async (IProductGetterService productGetter, Guid id) =>
-{
-    var result = await productGetter.GetByIdAsync(id);
-
-    if (result.IsSuccess)
-        return Results.Ok(result.Value.AdaptToProductResponse());
-
-    var error = result.Errors.FirstOrDefault();
-
-    return error switch
-    {
-        ValidationError => Results.BadRequest(error),
-        NotFoundError => Results.NotFound(error),
-        _ => Results.InternalServerError(error)
-    };
-})
-.WithName("GetProduct");
-
-
-app.MapPost("/products", async (IProductAdderService productAdder, AddProductRequest request) =>
-{
-    var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
-
-    if (result.IsSuccess)
-        return Results.Ok(result.Value.AdaptToProductResponse());
-
-    var error = result.Errors.FirstOrDefault();
-
-    return error switch
-    {
-        ValidationError => Results.BadRequest(error),
-        _ => Results.InternalServerError(error)
-    };
-})
-.WithName("PostProduct");
+var mapGroup = app.MapGroup("products").MapProducts();
 
 app.Run();
