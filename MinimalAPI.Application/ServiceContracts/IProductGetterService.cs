@@ -5,7 +5,7 @@ namespace MinimalAPI.Application.ServiceContracts
 {
     public interface IProductGetterService
     {
-        Task<Result<ProductDto>> GetAsync(Guid productId);
+        Task<Result<ProductDto>> GetByIdAsync(Guid productId);
 
         Task<IEnumerable<ProductDto>> GetAllAsync();
     }

@@ -13,7 +13,7 @@ namespace MinimalAPI.Application.Services
 
         public ProductGetterService(IProductsRepository repo) => _repo = repo;
 
-        public async Task<Result<ProductDto>> GetAsync(Guid productId)
+        public async Task<Result<ProductDto>> GetByIdAsync(Guid productId)
         {
             var product = await _repo.GetByIdAsync(productId);
 
