@@ -1,3 +1,5 @@
+using MinimalAPI.Application.ServiceContracts;
+using MinimalAPI.WebAPI.DTOs;
 using MinimalAPI.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,11 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-});
+app.MapGet("/products", async (IProductGetterService productGetter) =>
+{
+    var products = await productGetter.GetAllAsync();
+    return Results.Ok(products.Select(p => p.AdaptToProductResponse()));
+})
+.WithName("GetProducts");
 
 app.Run();
