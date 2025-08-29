@@ -30,18 +30,7 @@ namespace MinimalAPI.WebAPI.Extensions
             group.MapGet("/{id:guid}", async (IProductGetterService productGetter, Guid id) =>
             {
                 var result = await productGetter.GetByIdAsync(id);
-
-                if (result.IsSuccess)
-                    return Results.Ok(result.Value.AdaptToProductResponse());
-
-                var error = result.Errors.FirstOrDefault();
-
-                return error switch
-                {
-                    ValidationError => Results.BadRequest(error),
-                    NotFoundError => Results.NotFound(error),
-                    _ => Results.InternalServerError(error)
-                };
+                return result.ToApiResult();
             })
             .WithName("GetProduct");
         }
@@ -51,17 +40,7 @@ namespace MinimalAPI.WebAPI.Extensions
             group.MapPost("", async (IProductAdderService productAdder, AddProductRequest request) =>
             {
                 var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
-
-                if (result.IsSuccess)
-                    return Results.Ok(result.Value.AdaptToProductResponse());
-
-                var error = result.Errors.FirstOrDefault();
-
-                return error switch
-                {
-                    ValidationError => Results.BadRequest(error),
-                    _ => Results.InternalServerError(error)
-                };
+                return result.ToApiResult();
             })
             .WithName("PostProduct");
         }
