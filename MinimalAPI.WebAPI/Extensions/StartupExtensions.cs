@@ -17,6 +17,9 @@ namespace MinimalAPI.WebAPI.Extensions
 
             services.AddValidatorsFromAssemblyContaining<AddProductDtoValidator>();
 
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
             return services;
         }
     }

@@ -9,7 +9,11 @@ var app = builder.Build();
 app.UseHsts();
 app.UseRouting();
 
-app.MapGet("/", () => {
+if(app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 });
 
