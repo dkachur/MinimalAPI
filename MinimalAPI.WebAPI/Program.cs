@@ -43,4 +43,23 @@ app.MapGet("/products/{id:guid}", async (IProductGetterService productGetter, Gu
     };
 })
 .WithName("GetProduct");
+
+
+app.MapPost("/products", async (IProductAdderService productAdder, AddProductRequest request) =>
+{
+    var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
+
+    if (result.IsSuccess)
+        return Results.Ok(result.Value.AdaptToProductResponse());
+
+    var error = result.Errors.FirstOrDefault();
+
+    return error switch
+    {
+        ValidationError => Results.BadRequest(error),
+        _ => Results.InternalServerError(error)
+    };
+})
+.WithName("PostProduct");
+
 app.Run();
