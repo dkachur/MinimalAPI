@@ -1,3 +1,4 @@
+using MinimalAPI.Application.Errors;
 using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.WebAPI.DTOs;
 using MinimalAPI.WebAPI.Extensions;
@@ -24,4 +25,22 @@ app.MapGet("/products", async (IProductGetterService productGetter) =>
 })
 .WithName("GetProducts");
 
+
+app.MapGet("/products/{id:guid}", async (IProductGetterService productGetter, Guid id) =>
+{
+    var result = await productGetter.GetByIdAsync(id);
+
+    if (result.IsSuccess)
+        return Results.Ok(result.Value.AdaptToProductResponse());
+
+    var error = result.Errors.FirstOrDefault();
+
+    return error switch
+    {
+        ValidationError => Results.BadRequest(error),
+        NotFoundError => Results.NotFound(error),
+        _ => Results.InternalServerError(error)
+    };
+})
+.WithName("GetProduct");
 app.Run();
