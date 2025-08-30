@@ -1,4 +1,5 @@
-﻿using MinimalAPI.Application.ServiceContracts;
+﻿using Microsoft.AspNetCore.Mvc;
+using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.WebAPI.DTOs;
 
 namespace MinimalAPI.WebAPI.Extensions
@@ -27,7 +28,7 @@ namespace MinimalAPI.WebAPI.Extensions
 
         private static void MapGetById(RouteGroupBuilder group)
         {
-            group.MapGet("/{id:guid}", async (IProductGetterService productGetter, Guid id) =>
+            group.MapGet("/{id:guid}", async (IProductGetterService productGetter, [FromRoute]Guid id) =>
             {
                 var result = await productGetter.GetByIdAsync(id);
                 return result.ToApiResult();
@@ -47,8 +48,12 @@ namespace MinimalAPI.WebAPI.Extensions
 
         private static void MapPut(RouteGroupBuilder group)
         {
-            group.MapPut("/", async (IProductUpdaterService productUpdater, UpdateProductRequest request) =>
+            group.MapPut("/{id:guid}", async (IProductUpdaterService productUpdater, [FromRoute]Guid id, [FromBody]UpdateProductRequest request) =>
             {
+                if (id != request.Id)
+                    return Results.BadRequest($"The product ID from route ('{id}') " +
+                        $"does not match the product ID from the request body ('{request.Id}')");
+
                 var result = await productUpdater.UpdateAsync(request.AdaptToUpdateProductDto());
                 return result.ToApiResult();
             })
