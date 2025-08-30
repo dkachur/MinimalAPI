@@ -1,5 +1,4 @@
-﻿using MinimalAPI.Application.Errors;
-using MinimalAPI.Application.ServiceContracts;
+﻿using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.WebAPI.DTOs;
 
 namespace MinimalAPI.WebAPI.Extensions
@@ -11,6 +10,7 @@ namespace MinimalAPI.WebAPI.Extensions
             MapGetAll(group);
             MapGetById(group);
             MapPost(group);
+            MapPut(group);
 
             return group;
         }
@@ -37,12 +37,22 @@ namespace MinimalAPI.WebAPI.Extensions
 
         private static void MapPost(RouteGroupBuilder group)
         {
-            group.MapPost("", async (IProductAdderService productAdder, AddProductRequest request) =>
+            group.MapPost("/", async (IProductAdderService productAdder, AddProductRequest request) =>
             {
                 var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
                 return result.ToApiResult();
             })
             .WithName("PostProduct");
+        }
+
+        private static void MapPut(RouteGroupBuilder group)
+        {
+            group.MapPut("/", async (IProductUpdaterService productUpdater, UpdateProductRequest request) =>
+            {
+                var result = await productUpdater.UpdateAsync(request.AdaptToUpdateProductDto());
+                return result.ToApiResult();
+            })
+            .WithName("PutProduct");
         }
     }
 }
