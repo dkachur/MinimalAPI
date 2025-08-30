@@ -17,6 +17,19 @@ namespace MinimalAPI.WebAPI.Extensions
                 return Results.Ok(result.Value);
             }
 
+            return ConvertToErrorResult(result.ToResult());
+        }
+
+        public static IResult ToApiResult(this Result result)
+        {
+            if (result.IsSuccess)
+                return Results.NoContent();
+
+            return ConvertToErrorResult(result);
+        }
+
+        private static IResult ConvertToErrorResult(Result result)
+        {
             var error = result.Errors.FirstOrDefault();
             return error switch
             {
