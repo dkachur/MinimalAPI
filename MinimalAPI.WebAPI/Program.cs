@@ -1,6 +1,3 @@
-using MinimalAPI.Application.Errors;
-using MinimalAPI.Application.ServiceContracts;
-using MinimalAPI.WebAPI.DTOs;
 using MinimalAPI.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +9,7 @@ var app = builder.Build();
 app.UseHsts();
 app.UseRouting();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

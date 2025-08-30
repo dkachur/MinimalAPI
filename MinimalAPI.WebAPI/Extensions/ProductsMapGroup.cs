@@ -12,6 +12,7 @@ namespace MinimalAPI.WebAPI.Extensions
             MapGetById(group);
             MapPost(group);
             MapPut(group);
+            MapDelete(group);
 
             return group;
         }
@@ -58,6 +59,16 @@ namespace MinimalAPI.WebAPI.Extensions
                 return result.ToApiResult();
             })
             .WithName("PutProduct");
+        }
+
+        private static void MapDelete(RouteGroupBuilder group)
+        {
+            group.MapDelete("/{id:guid}", async (IProductDeleterService productDeleter, [FromRoute] Guid id) =>
+            {
+                var result = await productDeleter.DeleteAsync(id);
+                return result.ToApiResult();
+            })
+            .WithName("DeleteProduct");
         }
     }
 }
