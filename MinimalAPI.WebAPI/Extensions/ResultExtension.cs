@@ -31,13 +31,15 @@ namespace MinimalAPI.WebAPI.Extensions
         private static IResult ConvertToErrorResult(Result result)
         {
             var error = result.Errors.FirstOrDefault();
+            var response = new ErrorResponse(error?.Message);
+
             return error switch
             {
-                ValidationError => Results.BadRequest(error),
-                NotFoundError => Results.NotFound(error),
-                ConflictError => Results.Conflict(error),
-                DeleteFailedError => Results.InternalServerError(error),
-                _ => Results.InternalServerError(error)
+                ValidationError => Results.BadRequest(response),
+                NotFoundError => Results.NotFound(response),
+                ConflictError => Results.Conflict(response),
+                DeleteFailedError => Results.InternalServerError(response),
+                _ => Results.InternalServerError(response)
             };
         }
     }

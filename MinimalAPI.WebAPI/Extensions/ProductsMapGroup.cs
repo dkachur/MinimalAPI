@@ -4,6 +4,8 @@ using MinimalAPI.WebAPI.DTOs;
 
 namespace MinimalAPI.WebAPI.Extensions
 {
+    public record ErrorResponse(string? Message);
+
     public static class ProductsMapGroup
     {
         public static RouteGroupBuilder MapProducts(this RouteGroupBuilder group)
@@ -52,8 +54,9 @@ namespace MinimalAPI.WebAPI.Extensions
             group.MapPut("/{id:guid}", async (IProductUpdaterService productUpdater, [FromRoute]Guid id, [FromBody]UpdateProductRequest request) =>
             {
                 if (id != request.Id)
-                    return Results.BadRequest($"The product ID from route ('{id}') " +
-                        $"does not match the product ID from the request body ('{request.Id}')");
+                    return Results.BadRequest(
+                        new ErrorResponse($"The product ID from route ('{id}') " +
+                        $"does not match the product ID from the request body ('{request.Id}')"));
 
                 var result = await productUpdater.UpdateAsync(request.AdaptToUpdateProductDto());
                 return result.ToApiResult();
