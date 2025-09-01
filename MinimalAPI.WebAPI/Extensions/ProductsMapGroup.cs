@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.WebAPI.DTOs;
+using MinimalAPI.WebAPI.EndpointFilters;
 
 namespace MinimalAPI.WebAPI.Extensions
 {
@@ -31,7 +32,7 @@ namespace MinimalAPI.WebAPI.Extensions
 
         private static void MapGetById(RouteGroupBuilder group)
         {
-            group.MapGet("/{id:guid}", async (IProductGetterService productGetter, [FromRoute]Guid id) =>
+            group.MapGet("/{id:guid}", async (IProductGetterService productGetter, [FromRoute] Guid id) =>
             {
                 var result = await productGetter.GetByIdAsync(id);
                 return result.ToApiResult();
@@ -41,11 +42,12 @@ namespace MinimalAPI.WebAPI.Extensions
 
         private static void MapPost(RouteGroupBuilder group)
         {
-            group.MapPost("/", async (IProductAdderService productAdder, AddProductRequest request) =>
+            group.MapPost("/", async (IProductAdderService productAdder, [FromBody] AddProductRequest request) =>
             {
                 var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
                 return result.ToApiResult();
             })
+            .AddEndpointFilter<ValidationFilter<AddProductRequest>>()
             .WithName("PostProduct");
         }
 
@@ -61,6 +63,7 @@ namespace MinimalAPI.WebAPI.Extensions
                 var result = await productUpdater.UpdateAsync(request.AdaptToUpdateProductDto());
                 return result.ToApiResult();
             })
+            .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>()
             .WithName("PutProduct");
         }
 

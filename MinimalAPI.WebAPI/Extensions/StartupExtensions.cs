@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MinimalAPI.Infrastructure.DatabaseContext;
-using FluentValidation;
-using MinimalAPI.Application.DTOs;
-using MinimalAPI.Application.Validatiors;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MinimalAPI.Application.ServiceContracts;
 using MinimalAPI.Application.Services;
+using MinimalAPI.Application.Validatiors;
 using MinimalAPI.Domain.RepositoryContracts;
+using MinimalAPI.Infrastructure.DatabaseContext;
 using MinimalAPI.Infrastructure.Repositories;
+using System.Globalization;
 
 namespace MinimalAPI.WebAPI.Extensions
 {
@@ -25,6 +25,8 @@ namespace MinimalAPI.WebAPI.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
 
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en");
+            services.AddValidatorsFromAssemblyContaining<Program>();
             services.AddValidatorsFromAssemblyContaining<AddProductDtoValidator>();
 
             services.AddEndpointsApiExplorer();
