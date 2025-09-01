@@ -47,13 +47,14 @@ namespace MinimalAPI.WebAPI.Extensions
                 var result = await productAdder.AddAsync(request.AdaptToAddProductDto());
                 return result.ToApiResult();
             })
+            .AddEndpointFilter<RequireBodyFilter<AddProductRequest>>()
             .AddEndpointFilter<ValidationFilter<AddProductRequest>>()
             .WithName("PostProduct");
         }
 
         private static void MapPut(RouteGroupBuilder group)
         {
-            group.MapPut("/{id:guid}", async (IProductUpdaterService productUpdater, [FromRoute]Guid id, [FromBody]UpdateProductRequest request) =>
+            group.MapPut("/{id:guid}", async (IProductUpdaterService productUpdater, [FromRoute] Guid id, [FromBody] UpdateProductRequest request) =>
             {
                 if (id != request.Id)
                     return Results.BadRequest(
@@ -63,6 +64,7 @@ namespace MinimalAPI.WebAPI.Extensions
                 var result = await productUpdater.UpdateAsync(request.AdaptToUpdateProductDto());
                 return result.ToApiResult();
             })
+            .AddEndpointFilter<RequireBodyFilter<UpdateProductRequest>>()
             .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>()
             .WithName("PutProduct");
         }
